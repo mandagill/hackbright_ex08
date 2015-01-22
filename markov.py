@@ -47,11 +47,17 @@ def make_text(chains):
     return final_chained_string
 
 def main():
-    args = sys.argv
-    input_text_raw = open(args[1])
 
-    dictionary_of_values = make_chains(input_text_raw)
-    random_text = make_text(dictionary_of_values)
+    # Initially, we didn't slice the arguments on the line below and it would pass the script as text as a function parameter. Interesting snafu.
+    args = sys.argv[1:]
+    master_dictionary = {}
+
+    for i in range(len(args)):
+        input_text_raw = open(args[i])
+        dictionary_of_words = make_chains(input_text_raw)
+        master_dictionary = dict(master_dictionary.items() + dictionary_of_words.items())
+
+    random_text = make_text(master_dictionary)
     print random_text
 
 if __name__ == "__main__":
