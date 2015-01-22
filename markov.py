@@ -6,51 +6,45 @@ def make_chains(corpus):
     """Takes an input text as a string and returns a dictionary of
     markov chains."""
 
-    master_list = []
-    for line in corpus:
-        line = line.strip()
-        line = line.split()
-        if line != []:
-            for word in line:
-                master_list.append(word)
-
+    corpus_as_string = corpus.read().split()
     chain_dict = {}
     
-    counter = 0
-    for word in master_list[:-2]:
-        if (master_list[counter],master_list[counter + 1]) not in chain_dict:
-            chain_dict[(master_list[counter], master_list[counter +1])] = [master_list[counter +2]]          
+    for i in range(len(corpus_as_string)-2):
+        if (corpus_as_string[i],corpus_as_string[i + 1]) not in chain_dict:
+            chain_dict[(corpus_as_string[i], corpus_as_string[i +1])] = [corpus_as_string[i +2]]          
         else:
-            chain_dict[(master_list[counter], master_list[counter + 1])].append(master_list[counter + 2])
-        counter += 1
+            chain_dict[(corpus_as_string[i], corpus_as_string[i + 1])].append(corpus_as_string[i + 2])
  
-    # print chain_dict 
     return chain_dict  
 
 def make_text(chains):
     """Takes a dictionary of markov chains and returns random text
     based off an original text."""
 
-    first_key, first_value = random.choice(chains.items())
-    #first_key is a tuple; first_value is a list of possible continuations
-    word1, word2 = first_key
-    new_list = [word1, word2]
+    while True:
+        first_key = random.choice(chains.keys())
+        #first_key is a tuple; first_value is a list of possible continuations
+        word1, word2 = first_key
+        if word1[0].isupper():
+            break
 
-    word3 = random.choice(first_value)
-    new_list.append(word3)
+    words_to_be_chained = [word1, word2]
+    punctuation = ['.', '?', '!']
 
     while True:
-        search_tuple = (new_list[-2], new_list[-1])
+        search_tuple = (words_to_be_chained[-2], words_to_be_chained[-1])
         if search_tuple in chains:
-            value = chains[search_tuple]
-            word3 = random.choice(value)
-            new_list.append(word3)
+            possible_next_words = chains[search_tuple]
+            definite_next_word = random.choice(possible_next_words)
+            words_to_be_chained.append(definite_next_word)
+            if definite_next_word[-1] in punctuation:
+                break
         else:    
             break
 
-    new_string = " ".join(new_list)
+    final_chained_string = " ".join(words_to_be_chained)
 
-    return new_string
+    return final_chained_string
 
 def main():
     args = sys.argv
