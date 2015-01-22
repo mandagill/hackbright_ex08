@@ -12,18 +12,18 @@ def make_chains(corpus):
         if line != []:
             for word in line:
                 master_list.append(word)
-    
-    print master_list
 
-#     chain_dict = {}
-#     for word in corpus:
-#         if (corpus[0],corpus[1]) not in chain_dict:
-#             chain_dict = {(corpus[0], corpus[1]):[corpus[2]]}          
-#         else:
-#             chain_dict[(corpus[0], corpus[1])].append(corpus[2])
-#         corpus.pop(0)
+    chain_dict = {}
+
+    counter = 0
+    for word in master_list[:-2]:
+        if (master_list[counter],master_list[counter + 1]) not in chain_dict:
+            chain_dict[(master_list[counter], master_list[counter +1])] = [master_list[counter +2]]          
+        else:
+            chain_dict[(master_list[counter], master_list[counter + 1])].append(master_list[counter + 2])
+        counter += 1
     
-#     print corpus    
+    print chain_dict    
 #     return corpus
 
 # def make_text(chains):
