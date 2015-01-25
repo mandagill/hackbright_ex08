@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 import random
+import api
 
 def make_chains(corpus, n_gram_size):
     """Takes an input text as a string and returns a dictionary of
@@ -8,7 +9,6 @@ def make_chains(corpus, n_gram_size):
 
     corpus_as_string = corpus.read().split()
     chain_dict = {}
-
     
     c = corpus_as_string
     n = n_gram_size
@@ -55,6 +55,13 @@ def make_text(chains):
 
     return final_chained_string
 
+
+def ask_to_send(tweet_text):
+    user_choice = raw_input("Would you like to send this to Twitter? Y/N > ")
+    if user_choice == "Y":
+        api.send_to_twitter("Test tweet!")
+    
+
 def main():
 
     file_paths = sys.argv[1:]
@@ -64,11 +71,11 @@ def main():
     for i in range(len(file_paths)):
         input_text_raw = open(file_paths[i])
         dictionary_of_words = make_chains(input_text_raw, n_gram_size)
-        print dictionary_of_words
-        # master_dictionary = dict(master_dictionary.items() + dictionary_of_words.items())
+        master_dictionary = dict(master_dictionary.items() + dictionary_of_words.items())
 
-    # random_text = make_text(master_dictionary)
-    # print random_text
+    random_text = make_text(master_dictionary)
+    print random_text
+    ask_to_send(random_text)
 
 if __name__ == "__main__":
     main()
